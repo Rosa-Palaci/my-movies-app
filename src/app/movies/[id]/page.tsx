@@ -10,7 +10,7 @@ const MovieDetailPage = () => {
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
   console.log(from);
-  const [movie, setMovie] = useState<IMovieDetail | null>(null); // pendiente de type
+  const [movie, setMovie] = useState<IMovieDetail | null>(null); 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
