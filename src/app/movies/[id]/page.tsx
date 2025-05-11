@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { getMovieById } from "@/services/movies/getMovieById";
+import { IMovieDetail } from "@/types/MovieDetail";
+
 const MovieDetailPage = () => {
   const { id } = useParams(); // id is a string | string[] | undefined
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
   console.log(from);
-  const [movie, setMovie] = useState<any>(); // pendiente de type
+  const [movie, setMovie] = useState<IMovieDetail | null>(null); // pendiente de type
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
