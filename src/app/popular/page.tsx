@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import { getPopularMovies } from "@/services/movies/getPopularMovies";
 import Link from "next/link";
-import MovieCard from "@/components/MovieCard/MovieCard";
+import MovieList from "@/components/MovieList/MovieList";
 
 const PopularClientPage = () => {
   const [loading, setLoading] = useState(false);
@@ -29,27 +29,11 @@ const PopularClientPage = () => {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Client-rendered Popular Movies</h2>
-      {loading && <p className="text-sm text-muted-foreground">Cargando...</p>}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {movies?.map((movie) => (
-          <Link
-            key={movie.id}
-            href={{
-              pathname: `/movie/${movie.id}`,
-              query: { from: "popular" },
-            }}
-          >
-            <MovieCard
-              title={movie.title}
-              voteAverage={movie.vote_average}
-              posterPath={movie.poster_path}
-              releaseYear={parseInt(movie.release_date?.split("-")[0])}
-              description={movie.overview}
-            />
-          </Link>
-        ))}
-      </div>
+      {loading ? (
+        <p className="text-sm text-muted-foreground">Cargando...</p>
+      ) : (
+        <MovieList movies={movies} from="popular" />
+      )}
     </div>
   );
 };
