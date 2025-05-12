@@ -16,8 +16,14 @@ const NowPlayingPage = () => {
   }, []);
 
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">Now Playing</h2>
+    <div
+      className="pt-[120px] pl-[90px] pr-[90px]"
+      style={{
+        background:
+          "linear-gradient(to bottom right, #9031FF, #21C5FE, #001B96)",
+      }}
+    >
+      <h2 className="text-4xl font-bold mb-4 text-center">Now Playing</h2>
       {loading ? (
         <p className="text-sm text-muted-foreground">Cargando...</p>
       ) : (

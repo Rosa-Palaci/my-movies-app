@@ -31,6 +31,7 @@ const MovieCard: React.FC<IMovieCard> = ({
             height="200"
             className="rounded-t-3xl justify-center grid object-cover"
             alt={title}
+            loading="lazy"
           />
           <div className="p-5 z-10">
             {/* Movie Title */}
