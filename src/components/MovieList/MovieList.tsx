@@ -1,4 +1,3 @@
-import { useState } from "react";
 import MovieCard from "../MovieCard/MovieCard";
 import { useRouter } from "next/navigation";
 
@@ -18,26 +17,13 @@ interface MovieListProps {
 
 const MovieList: React.FC<MovieListProps> = ({ movies, from = "" }) => {
   const router = useRouter();
-  const [showOverlay, setShowOverlay] = useState(false);
 
   const handleClick = (id: number) => {
-    setShowOverlay(true);
-    setTimeout(() => {
-      router.push(`/movie/${id}?from=${from}`);
-    }, 2000); // Espera 2 segundos
+    router.push(`/movie/${id}?from=${from}`);
   };
 
   return (
     <>
-      {/* Overlay */}
-      {showOverlay && (
-        <div className="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center">
-          {/* Spinner */}
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-pink-500 mb-6" />
-          <h1 className="text-white text-5xl font-bold">Cine Rosa</h1>
-        </div>
-      )}
-
       {/* Movie grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {movies.map((movie) => (

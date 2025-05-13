@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { getNowPlayingMovies } from "@/services/movies/getNowPlayingMovies";
 import MovieList from "@/components/MovieList/MovieList";
+import Loader from "@/components/Loader/Loader";
 
 const NowPlayingPage = () => {
   const [movies, setMovies] = useState<any[]>([]);
@@ -24,11 +25,7 @@ const NowPlayingPage = () => {
       }}
     >
       <h2 className="text-4xl font-bold mb-4 text-center">Now Playing</h2>
-      {loading ? (
-        <p className="text-sm text-muted-foreground">Cargando...</p>
-      ) : (
-        <MovieList movies={movies} from="now-playing" />
-      )}
+      {loading ? <Loader /> : <MovieList movies={movies} from="now-playing" />}
     </div>
   );
 };
