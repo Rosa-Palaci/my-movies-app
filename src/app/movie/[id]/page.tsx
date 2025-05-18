@@ -1,8 +1,11 @@
 // src/app/movie/[id]/page.tsx
 "use client";
+
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { getMovieById } from "@/services/movies/getMovieById";
+import { markAsFavorite } from "@/services/accounts/markAsFavorite";
+import { useGuestSession } from "@/providers/GuestSessionContext";
 import { IMovieDetail } from "@/types/MovieDetail";
 import Image from "next/image";
 import Loader from "@/components/Loader/Loader";
@@ -11,13 +14,15 @@ const MovieDetailPage = () => {
   const { id } = useParams(); // id is a string | string[] | undefined
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
-  console.log(from);
 
   const [movie, setMovie] = useState<IMovieDetail | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const { guestSessionId } = useGuestSession();
 
+  //Cargar movie
   useEffect(() => {
     if (!id || typeof id !== "string") return;
     const fetchMovie = async () => {
@@ -34,6 +39,38 @@ const MovieDetailPage = () => {
     };
     fetchMovie();
   }, [id]);
+
+  // Verificar favoritos
+  useEffect(() => {
+    if (!id || typeof id !== "string") return;
+    const storedFavorites = localStorage.getItem("favoriteMovieIds");
+    const favoriteIds: number[] = storedFavorites
+      ? JSON.parse(storedFavorites)
+      : [];
+    setIsFavorite(favoriteIds.includes(Number(id)));
+  }, [id]);
+
+  // Toggle favorito
+  const handleToggleFavorite = async () => {
+    if (!guestSessionId || !movie) return;
+    const newFavoriteState = !isFavorite;
+
+    try {
+      await markAsFavorite(movie.id, newFavoriteState, guestSessionId);
+      setIsFavorite(newFavoriteState);
+
+      const stored = localStorage.getItem("favoriteMovieIds");
+      const ids: number[] = stored ? JSON.parse(stored) : [];
+
+      const updated = newFavoriteState
+        ? [...new Set([...ids, movie.id])]
+        : ids.filter((mid) => mid !== movie.id);
+
+      localStorage.setItem("favoriteMovieIds", JSON.stringify(updated));
+    } catch (error) {
+      console.error("Failed to update favorite:", error);
+    }
+  };
 
   if (error) return <div>{error}</div>;
 
@@ -66,7 +103,16 @@ const MovieDetailPage = () => {
                   <p className="text-lg drop-shadow-md text-white">
                     {movie.overview}
                   </p>
-                  {/* Add more movie details here */}
+                  <button
+                    onClick={handleToggleFavorite}
+                    className={`px-4 py-2 rounded ${
+                      isFavorite
+                        ? "bg-red-500 hover:bg-red-600"
+                        : "bg-yellow-500 hover:bg-yellow-600"
+                    } text-white font-bold w-max`}
+                  >
+                    {isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
+                  </button>
                 </div>
               )}
             </>
