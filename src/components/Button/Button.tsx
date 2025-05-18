@@ -1,41 +1,46 @@
-import React from 'react';
-
-import './button.css';
+import React from "react";
+import { Heart, HeartOff } from "lucide-react";
+import { motion, useAnimation } from "framer-motion";
 
 export interface ButtonProps {
-  /** Is this the principal call to action on the page? */
-  primary?: boolean;
-  /** What background color to use */
-  backgroundColor?: string;
-  /** How large should the button be? */
-  size?: 'small' | 'medium' | 'large';
-  /** Button contents */
+  isFavorite: boolean;
   label: string;
-  /** Optional click handler */
   onClick?: () => void;
 }
 
-/** Primary UI component for user interaction */
-export const Button = ({
-  primary = false,
-  size = 'medium',
-  backgroundColor,
-  label,
-  ...props
-}: ButtonProps) => {
-  const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
+export const Button = ({ isFavorite, label, onClick }: ButtonProps) => {
+  const baseStyles =
+    "flex items-center gap-2 px-4 py-2 rounded text-white font-bold w-max transition-colors text-[18px] rounded-[20px]";
+
+  const dynamicStyles = isFavorite
+    ? "bg-[#DA0D5B]/70  hover:bg-[#c20b51]/70 "
+    : "bg-[#FAA4BD]/60  hover:bg-[#FAA4BD]/60 ";
+
+  const controls = useAnimation();
+
+  const handleClick = async () => {
+    await controls.start({
+      y: [0, -200, 0],
+      rotate: [0, 360, 0],
+      transition: {
+        y: { duration: 0.6, ease: "easeOut" },
+        rotate: { duration: 1.2, ease: "linear" },
+      },
+    });
+
+    if (onClick) onClick();
+  };
+
   return (
-    <button
-      type="button"
-      className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
-      {...props}
-    >
+    <button onClick={handleClick} className={`${baseStyles} ${dynamicStyles}`}>
+      <motion.div animate={controls}>
+        {isFavorite ? (
+          <HeartOff size={25} />
+        ) : (
+          <Heart size={25} fill="currentColor" className="text-red-600" />
+        )}
+      </motion.div>
       {label}
-      <style jsx>{`
-        button {
-          background-color: ${backgroundColor};
-        }
-      `}</style>
     </button>
   );
 };

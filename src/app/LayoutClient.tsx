@@ -16,7 +16,7 @@ export default function LayoutClient({
     pathname === "/my-favorites"; 
   return (
     <main
-      className={isFullscreen ? "p-0" : "px-6 pt-32 pb-6 min-h-screen"}
+      className={isFullscreen ? "p-0 min-h-screen" : "px-6 pt-32 pb-6 min-h-screen"}
       style={
         hasGradient
           ? {
