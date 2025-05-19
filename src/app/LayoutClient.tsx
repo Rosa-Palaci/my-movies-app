@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function LayoutClient({
   children,
@@ -8,15 +9,23 @@ export default function LayoutClient({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
   const isFullscreen = pathname?.startsWith("/movie") || pathname === "/";
   const hasGradient =
     pathname === "/popular" ||
     pathname === "/now-playing" ||
     pathname === "/top-rated" ||
-    pathname === "/my-favorites"; 
+    pathname === "/my-favorites";
   return (
     <main
-      className={isFullscreen ? "p-0 min-h-screen" : "px-6 pt-32 pb-6 min-h-screen"}
+      className={
+        isFullscreen ? "p-0 min-h-screen" : "px-6 pt-32 pb-6 min-h-screen"
+      }
       style={
         hasGradient
           ? {

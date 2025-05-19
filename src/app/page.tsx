@@ -2,58 +2,61 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
+
 import HorizontalMovieList from "@/components/HorizontalMovieList/HorizontalMovieList";
+import TrailerList from "@/components/TrailerList/TrailerList";
+
 import { getTrendingMovies } from "@/services/movies/getTrendingMovies";
+import { getTrendingTrailers } from "@/services/movies/getTrendingTrailers";
+
 import { IMovie } from "@/types/Movie";
+import { Video } from "@/types/Video";
 
 export default function Home() {
-  const [movies, setMovies] = useState<any[]>([]);
+  const [movies, setMovies] = useState<IMovie[]>([]);
   const [index, setIndex] = useState(0);
+
   const [trending, setTrending] = useState<IMovie[]>([]);
+  const [trailers, setTrailers] = useState<Video[]>([]);
 
   useEffect(() => {
-    const fetchMovie = async () => {
-      try {
-        const res = await fetch(
-          "https://api.themoviedb.org/3/movie/popular?language=es-MX",
-          {
-            headers: {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_MOVIE_API_KEY}`,
-              Accept: "application/json",
-            },
-          }
-        );
-        const data = await res.json();
-        setMovies(data.results || []);
-      } catch (error) {
-        console.error("Error fetching movie:", error);
-      }
-    };
-
-    fetchMovie();
+    async function fetchPopular() {
+      const res = await fetch(
+        "https://api.themoviedb.org/3/movie/popular?language=es-MX",
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_MOVIE_API_KEY}`,
+            Accept: "application/json",
+          },
+        }
+      );
+      const { results } = await res.json();
+      setMovies(results ?? []);
+    }
+    fetchPopular().catch(console.error);
   }, []);
 
-  //Cambio de imagen
+  /* Carrusel imagenes */
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % movies.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
+    if (!movies.length) return;
+    const id = setInterval(
+      () => setIndex((prev) => (prev + 1) % movies.length),
+      5_000
+    );
+    return () => clearInterval(id);
   }, [movies]);
 
   // Trending movies
   useEffect(() => {
-    const fetchTrending = async () => {
-      try {
-        const data = await getTrendingMovies();
-        setTrending(data.results || []);
-      } catch (error) {
-        console.error("Error fetching trending or trailers:", error);
-      }
-    };
+    getTrendingMovies()
+      .then((data) => setTrending(data.results ?? []))
+      .catch(console.error);
+  }, []);
 
-    fetchTrending();
+  //Traileres
+  useEffect(() => {
+    getTrendingTrailers().then(setTrailers).catch(console.error);
   }, []);
 
   const movie = movies[index];
@@ -66,14 +69,28 @@ export default function Home() {
   return (
     <div>
       <div className="relative w-full h-screen z-0">
-        <Image
-          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-          alt={movie.title || "Imagen de película"}
-          fill
-          className="object-cover transition-opacity duration-1000"
-          priority
-          sizes="100vw"
-        />
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={movie.id}
+            className="absolute inset-0"
+            /* la nueva imagen entra desde la derecha */
+            initial={{ x: "100%" }} // fuera de pantalla a la derecha
+            animate={{ x: 0 }} // posición normal
+            /* la imagen saliente sale hacia la izquierda */
+            exit={{ x: "-100%" }} // se va completamente a la izquierda
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+          >
+            <Image
+              src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+              alt={movie.title}
+              fill
+              className="object-cover"
+              priority
+              sizes="100vw"
+            />
+          </motion.div>
+        </AnimatePresence>
+
         <div className="absolute top-1/2 transform -translate-y-1/2 text-white z-10 text-left max-w-lg pl-[90px]">
           <h1 className="text-4xl md:text-5xl font-bold drop-shadow-md mb-4">
             Bienvenido profesor César Betancourt a Cine Rosa
@@ -83,6 +100,8 @@ export default function Home() {
           </h2>
         </div>
       </div>
+      {/* Traileres */}
+      {trailers.length > 0 && <TrailerList videos={trailers} />}
       {/* Trending */}
       {trending.length > 0 && (
         <HorizontalMovieList title="Tendencias" movies={trending} />
