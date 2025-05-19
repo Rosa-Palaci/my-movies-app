@@ -4,19 +4,23 @@ import { useEffect, useState } from "react";
 import MovieList from "@/components/MovieList/MovieList";
 import { getFavoriteMovies } from "@/services/accounts/getFavoriteMovies";
 import { useGuestSession } from "@/providers/GuestSessionContext";
+import Pagination from "@/components/Pagination/Pagination";
 
 const MyFavoritePage = () => {
   const { guestSessionId } = useGuestSession();
   const [loading, setLoading] = useState(false);
-  const [movies, setMovies] = useState<any[]>([]); // Puedes tiparlo luego con IMovie[] si lo tienes
+  const [movies, setMovies] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchFavorites = async () => {
       if (!guestSessionId) return;
       setLoading(true);
       try {
-        const data = await getFavoriteMovies(guestSessionId);
+        const data = await getFavoriteMovies(guestSessionId, page);
         setMovies(data?.results || []);
+        setTotalPages(data?.total_pages || 1);
       } catch (err) {
         console.error("Error al cargar favoritos:", err);
       } finally {
@@ -25,7 +29,7 @@ const MyFavoritePage = () => {
     };
 
     fetchFavorites();
-  }, [guestSessionId]);
+  }, [guestSessionId, page]);
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -45,7 +49,16 @@ const MyFavoritePage = () => {
         </div>
       )}
 
-      {!loading && movies.length > 0 && <MovieList movies={movies} />}
+      {!loading && movies.length > 0 && (
+        <>
+          <MovieList movies={movies} />{" "}
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        </>
+      )}
     </div>
   );
 };
