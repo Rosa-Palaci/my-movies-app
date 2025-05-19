@@ -1,7 +1,7 @@
 export interface IMovieDetail {
     adult: boolean;
     backdrop_path: string;
-    belongs_to_collection: BelongsToCollection | null; //puede ser null si la película no forma parte de una colección
+    belongs_to_collection: BelongsToCollection | null;
     budget: number;
     genres: Genre[];
     homepage: string;
@@ -15,7 +15,7 @@ export interface IMovieDetail {
     poster_path: string;
     production_companies: ProductionCompany[];
     production_countries: ProductionCountry[];
-    release_date: string; // La API de TMDb devuelve release_date como un string ISO ("2024-05-10"), no como objeto Date.
+    release_date: string; 
     revenue: number;
     runtime: number;
     spoken_languages: SpokenLanguage[];
