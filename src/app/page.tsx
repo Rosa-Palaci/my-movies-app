@@ -73,11 +73,9 @@ export default function Home() {
           <motion.div
             key={movie.id}
             className="absolute inset-0"
-            /* la nueva imagen entra desde la derecha */
-            initial={{ x: "100%" }} // fuera de pantalla a la derecha
-            animate={{ x: 0 }} // posición normal
-            /* la imagen saliente sale hacia la izquierda */
-            exit={{ x: "-100%" }} // se va completamente a la izquierda
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }} 
+            exit={{ x: "-100%" }} 
             transition={{ duration: 0.8, ease: "easeInOut" }}
           >
             <Image
