@@ -28,7 +28,7 @@ const MovieList: React.FC<MovieListProps> = ({ movies, from = "" }) => {
               title={movie.title}
               voteAverage={movie.vote_average}
               posterPath={movie.poster_path}
-              releaseYear={movie.release_date.getFullYear()}
+              releaseYear={new Date(movie.release_date).getFullYear()}
               description={movie.overview}
             />
           </div>
