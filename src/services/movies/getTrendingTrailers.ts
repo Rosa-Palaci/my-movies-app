@@ -1,4 +1,4 @@
-import { IMovie } from "@/types/Movie";
+import { MyMovie } from "@/types/MyMovie";
 import { Video } from "@/types/Video";
 
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -14,7 +14,7 @@ export const getTrendingTrailers = async (): Promise<Video[]> => {
   ).then((r) => r.json());
 
   const trailers = await Promise.all(
-    (trending.results as IMovie[])
+    (trending.results as MyMovie[])
       .slice(0, 10)
       .filter((m) => !!m.poster_path)
       .map(async (movie) => {

@@ -3,12 +3,11 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { getMovieById } from "@/services/movies/getMovieById";
 import { getMovieRecommendations } from "@/services/movies/getMovieRecommendations";
 import { markAsFavorite } from "@/services/accounts/markAsFavorite";
 import { useGuestSession } from "@/providers/GuestSessionContext";
-import { IMovieDetail } from "@/types/MovieDetail";
 import Image from "next/image";
 import Loader from "@/components/Loader/Loader";
 import { Button } from "@/components/Button/Button";
@@ -16,13 +15,12 @@ import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import { MovieRecommendation } from "@/types/MovieRecommendation";
 import Link from "next/link";
+import { MyMovie } from "@/types/MyMovie";
 
 const MovieDetailPage = () => {
   const { id } = useParams(); // id is a string | string[] | undefined
-  const searchParams = useSearchParams();
-  const from = searchParams.get("from");
 
-  const [movie, setMovie] = useState<IMovieDetail | null>(null);
+  const [movie, setMovie] = useState<MyMovie | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);

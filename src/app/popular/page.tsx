@@ -5,10 +5,11 @@ import React, { useEffect, useState } from "react";
 import { getPopularMovies } from "@/services/movies/getPopularMovies";
 import MovieList from "@/components/MovieList/MovieList";
 import Pagination from "@/components/Pagination/Pagination";
+import { MyMovie } from "@/types/MyMovie";
 
 const PopularClientPage = () => {
   const [loading, setLoading] = useState(false);
-  const [movies, setMovies] = useState<any[]>([]);
+  const [movies, setMovies] = useState<MyMovie[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 

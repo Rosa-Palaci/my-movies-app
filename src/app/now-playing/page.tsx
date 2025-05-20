@@ -5,9 +5,10 @@ import { getNowPlayingMovies } from "@/services/movies/getNowPlayingMovies";
 import MovieList from "@/components/MovieList/MovieList";
 import Loader from "@/components/Loader/Loader";
 import Pagination from "@/components/Pagination/Pagination";
+import { MyMovie } from "@/types/MyMovie";
 
 const NowPlayingPage = () => {
-  const [movies, setMovies] = useState<any[]>([]);
+  const [movies, setMovies] = useState<MyMovie[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);

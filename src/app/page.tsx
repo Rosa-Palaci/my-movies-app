@@ -10,14 +10,14 @@ import TrailerList from "@/components/TrailerList/TrailerList";
 import { getTrendingMovies } from "@/services/movies/getTrendingMovies";
 import { getTrendingTrailers } from "@/services/movies/getTrendingTrailers";
 
-import { IMovie } from "@/types/Movie";
 import { Video } from "@/types/Video";
+import { MyMovie } from "@/types/MyMovie";
 
 export default function Home() {
-  const [movies, setMovies] = useState<IMovie[]>([]);
+  const [movies, setMovies] = useState<MyMovie[]>([]);
   const [index, setIndex] = useState(0);
 
-  const [trending, setTrending] = useState<IMovie[]>([]);
+  const [trending, setTrending] = useState<MyMovie[]>([]);
   const [trailers, setTrailers] = useState<Video[]>([]);
 
   useEffect(() => {
@@ -74,8 +74,8 @@ export default function Home() {
             key={movie.id}
             className="absolute inset-0"
             initial={{ x: "100%" }}
-            animate={{ x: 0 }} 
-            exit={{ x: "-100%" }} 
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
           >
             <Image

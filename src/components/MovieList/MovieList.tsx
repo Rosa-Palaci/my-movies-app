@@ -1,17 +1,9 @@
+import { MyMovie } from "@/types/MyMovie";
 import MovieCard from "../MovieCard/MovieCard";
 import { useRouter } from "next/navigation";
 
-interface Movie {
-  id: number;
-  title: string;
-  vote_average: number;
-  poster_path: string;
-  release_date: string;
-  overview: string;
-}
-
 interface MovieListProps {
-  movies: Movie[];
+  movies: MyMovie[];
   from?: string; // página de origen (opcional)
 }
 
@@ -36,7 +28,7 @@ const MovieList: React.FC<MovieListProps> = ({ movies, from = "" }) => {
               title={movie.title}
               voteAverage={movie.vote_average}
               posterPath={movie.poster_path}
-              releaseYear={parseInt(movie.release_date?.split("-")[0])}
+              releaseYear={movie.release_date.getFullYear()}
               description={movie.overview}
             />
           </div>

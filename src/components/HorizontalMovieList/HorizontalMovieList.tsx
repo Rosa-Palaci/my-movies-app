@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { MyMovie } from "@/types/MyMovie";
 
 type Props = {
   title: string;
-  movies: any[];
+  movies: MyMovie[];
 };
 
 export default function HorizontalMovieList({ title, movies }: Props) {

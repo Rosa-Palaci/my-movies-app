@@ -5,11 +5,12 @@ import MovieList from "@/components/MovieList/MovieList";
 import { getFavoriteMovies } from "@/services/accounts/getFavoriteMovies";
 import { useGuestSession } from "@/providers/GuestSessionContext";
 import Pagination from "@/components/Pagination/Pagination";
+import { MyMovie } from "@/types/MyMovie";
 
 const MyFavoritePage = () => {
   const { guestSessionId } = useGuestSession();
   const [loading, setLoading] = useState(false);
-  const [movies, setMovies] = useState<any[]>([]);
+  const [movies, setMovies] = useState<MyMovie[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -44,7 +45,7 @@ const MyFavoritePage = () => {
           <p className="text-xl">Aún no tienes películas favoritas.</p>
           <p className="text-sm mt-2">
             Ve al detalle de una película y haz clic en{" "}
-            <b>"Agregar a favoritos"</b>.
+            <b>&quot;Agregar a favoritos&quot;</b>.
           </p>
         </div>
       )}
