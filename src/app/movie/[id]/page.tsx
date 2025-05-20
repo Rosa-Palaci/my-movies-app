@@ -11,8 +11,6 @@ import { useGuestSession } from "@/providers/GuestSessionContext";
 import Image from "next/image";
 import Loader from "@/components/Loader/Loader";
 import { Button } from "@/components/Button/Button";
-import { useKeenSlider } from "keen-slider/react";
-import "keen-slider/keen-slider.min.css";
 import { MovieRecommendation } from "@/types/MovieRecommendation";
 import Link from "next/link";
 import { MyMovie } from "@/types/MyMovie";
@@ -30,10 +28,6 @@ const MovieDetailPage = () => {
   );
 
   const { guestSessionId } = useGuestSession();
-  const [sliderRef] = useKeenSlider({
-    loop: false,
-    slides: { perView: 4, spacing: 15 },
-  });
 
   //Cargar movie
   useEffect(() => {
@@ -151,34 +145,40 @@ const MovieDetailPage = () => {
               <h2 className="text-white text-3xl font-semibold mb-4">
                 Recomendaciones
               </h2>
-              <div ref={sliderRef} className="keen-slider">
-                {recommendations.map((rec) => (
-                  <Link
-                    key={rec.id}
-                    href={`/movie/${rec.id}`}
-                    className="keen-slider__slide min-w-[200px]"
-                  >
-                    {rec.poster_path ? (
+              <div className="overflow-x-auto whitespace-nowrap">
+                <div className="flex gap-4">
+                  {recommendations.map((rec) => (
+                    <Link
+                      key={rec.id}
+                      href={`/movie/${rec.id}`}
+                      className="min-w-[180px] flex-shrink-0"
+                    >
                       <motion.div
-                        whileHover={{ scale: 1.08 }}
-                        transition={{ duration: 0.3 }}
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                        className="relative w-[180px] h-[270px] rounded-[25px] overflow-hidden"
                       >
-                        <Image
-                          src={`https://image.tmdb.org/t/p/w300${rec.poster_path}`}
-                          alt={rec.title}
-                          width={200}
-                          height={300}
-                          className="rounded-[25px] shadow-md"
-                        />
+                        <div className="relative w-[180px] h-[270px]">
+                          {rec.poster_path ? (
+                            <Image
+                              src={`https://image.tmdb.org/t/p/w300${rec.poster_path}`}
+                              alt={rec.title}
+                              fill
+                              className="rounded-xl object-cover"
+                            />
+                          ) : (
+                            <div className="bg-gray-800 text-white text-sm flex justify-center items-center w-full h-full">
+                              Sin imagen
+                            </div>
+                          )}
+                        </div>
                       </motion.div>
-                    ) : (
-                      <div className="w-[200px] h-[300px] bg-gray-800 rounded-[25px] flex items-center justify-center text-white text-sm text-center">
-                        Sin imagen
-                      </div>
-                    )}
-                    <h2 className="text-white mt-2 text-[20px]">{rec.title}</h2>
-                  </Link>
-                ))}
+                      <p className="mt-2 text-sm text-white whitespace-normal w-[180px]">
+                        {rec.title}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           )}
